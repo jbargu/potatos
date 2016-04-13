@@ -44,8 +44,7 @@ unsigned char kbdus[128] =
 
 
 /* Handles the keyboard interrupt */
-void keyboard_handler(struct regs *r)
-{
+void keyboard_handler(struct regs *r) {
     unsigned char scancode;
 
     /* Read from the keyboard's data buffer */
@@ -53,17 +52,11 @@ void keyboard_handler(struct regs *r)
 
     /* If the top bit of the byte we read from the keyboard is
     *  set, that means that a key has just been released */
-    if (scancode & 0x80)
-    {
-    }
-    else
-    {
+    if (!(scancode & 0x80))
 	terminal_putchar(kbdus[scancode]);
-    }
 }
 
 /* Installs the keyboard handler into IRQ1 */
-void keyboard_install()
-{
+void keyboard_install() {
     irq_install_handler(1, keyboard_handler);
 }

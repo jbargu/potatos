@@ -27,33 +27,26 @@ void *irq_routines[16] =
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
-/* This installs a custom IRQ handler for the given IRQ */
-void irq_install_handler(int irq, void (*handler)(struct regs *r))
-{
+void irq_install_handler(int irq, void (*handler)(struct regs *r)) {
     irq_routines[irq] = handler;
 }
 
-/* This clears the handler for a given IRQ */
-void irq_uninstall_handler(int irq)
-{
+void irq_uninstall_handler(int irq) {
     irq_routines[irq] = 0;
 }
 
-unsigned char inportb (unsigned short _port)
-{
+unsigned char inportb (unsigned short _port) {
     unsigned char rv;
     asm ("inb %1, %0" : "=a" (rv) : "dN" (_port));
     return rv;
 }
 
-void outportb (unsigned short _port, unsigned char _data)
-{
+void outportb (unsigned short _port, unsigned char _data) {
     asm ("outb %1, %0" : : "dN" (_port), "a" (_data));
 }
 
 // Remap default irq addresses to 32+.
-void irq_remap(void)
-{
+void irq_remap(void) {
     outportb(0x20, 0x11);
     outportb(0xA0, 0x11);
     outportb(0x21, 0x20);
@@ -67,10 +60,8 @@ void irq_remap(void)
 }
 
 /* We first remap the interrupt controllers, and then we install
-*  the appropriate ISRs to the correct entries in the IDT. This
-*  is just like installing the exception handlers */
-void irq_install()
-{
+*  the appropriate ISRs to the correct entries in the IDT. */
+void irq_install() {
     irq_remap();
 
     idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);
@@ -91,38 +82,19 @@ void irq_install()
     idt_set_gate(47, (unsigned)irq15, 0x08, 0x8E);
 }
 
-/* Each of the IRQ ISRs point to this function, rather than
-*  the 'fault_handler' in 'isrs.c'. The IRQ Controllers need
-*  to be told when you are done servicing them, so you need
-*  to send them an "End of Interrupt" command (0x20). There
-*  are two 8259 chips: The first exists at 0x20, the second
-*  exists at 0xA0. If the second controller (an IRQ from 8 to
-*  15) gets an interrupt, you need to acknowledge the
-*  interrupt at BOTH controllers, otherwise, you only send
-*  an EOI command to the first controller. If you don't send
-*  an EOI, you won't raise any more IRQs */
-void irq_handler(struct regs *r)
-{
-    /* This is a blank function pointer */
+/* Handle all IRQs here. */
+void irq_handler(struct regs *r) {
     void (*handler)(struct regs *r);
 
-    /* Find out if we have a custom handler to run for this
-    *  IRQ, and then finally, run it */
+    // Retrieve handler for this request.
     handler = irq_routines[r->int_no - 32];
     if (handler)
-    {
         handler(r);
-    }
 
-    /* If the IDT entry that was invoked was greater than 40
-    *  (meaning IRQ8 - 15), then we need to send an EOI to
-    *  the slave controller */
+    // Send end of IRQ to slave controller.
     if (r->int_no >= 40)
-    {
         outportb(0xA0, 0x20);
-    }
 
-    /* In either case, we need to send an EOI to the master
-    *  interrupt controller too */
+    // Send end of IRQ to master controller.
     outportb(0x20, 0x20);
 }

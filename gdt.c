@@ -11,8 +11,7 @@ struct gdt_entry
     unsigned char base_high;
 } __attribute__((packed));
 
-/* Special pointer which includes the limit: The max bytes
-*  taken up by the GDT, minus 1. */
+// Size is max - 1 byte.
 struct gdt_ptr
 {
     unsigned short limit;
@@ -22,13 +21,11 @@ struct gdt_ptr
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
 
-/*  We use this to properly reload the new segment registers */
+// Reload
 extern void gdt_flush();
 
-/* Setup a descriptor in the Global Descriptor Table */
-void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran)
-{
-    /* Setup the descriptor base address */
+// Setup a descriptor in the Global Descriptor Table.
+void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran) {
     gdt[num].base_low = (base & 0xFFFF);
     gdt[num].base_middle = (base >> 16) & 0xFF;
     gdt[num].base_high = (base >> 24) & 0xFF;
@@ -42,14 +39,8 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
     gdt[num].access = access;
 }
 
-/* Should be called by main. This will setup the special GDT
-*  pointer, set up the first 3 entries in our GDT, and then
-*  finally call gdt_flush() in our assembler file in order
-*  to tell the processor where the new GDT is and update the
-*  new segment registers */
-void gdt_install()
-{
-    /* Setup the GDT pointer and limit */
+// Sets null, code and data segments and relaods them.
+void gdt_install() {
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
     gp.base = &gdt;
 
@@ -63,6 +54,5 @@ void gdt_install()
     // Data segment
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
-    /* Flush out the old GDT and install the new changes! */
     gdt_flush();
 }

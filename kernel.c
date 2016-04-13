@@ -15,10 +15,10 @@ void kernel_main() {
 	isrs_install();
 	irq_install();
 	keyboard_install();
+	terminal_initialize();
 
 	asm("sti");
 
-	terminal_initialize();
 
 	/*uint8_t key = 0;*/
 	/*asm("sti");*/
