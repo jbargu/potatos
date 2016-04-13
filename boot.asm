@@ -51,7 +51,7 @@ gdt_flush:
     mov gs, ax
     mov ss, ax
     jmp 0x08:flush2   ; 0x08 is the offset to our code segment: Reload it with
-    far jump
+		      ; far jump
 flush2:
     ret
 
