@@ -55,11 +55,18 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y) {
 
 // Print out character.
 void terminal_putchar(char c) {
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
+	if (c == '\n') {
 		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT) {
+		if(++terminal_row == VGA_HEIGHT)
 			terminal_row = 0;
+	}
+	else {
+		terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+
+		if (++terminal_column == VGA_WIDTH) {
+			terminal_column = 0;
+			if (++terminal_row == VGA_HEIGHT)
+				terminal_row = 0;
 		}
 	}
 }
@@ -69,4 +76,35 @@ void terminal_writestring(const char* data) {
 	size_t datalen = strlen(data);
 	for (size_t i = 0; i < datalen; i++)
 		terminal_putchar(data[i]);
+}
+
+// Returns current row.
+size_t curr_terminal_row() {
+	return terminal_row;
+}
+
+// Returns current column.
+size_t curr_terminal_column() {
+	return terminal_column;
+}
+
+// Clears given row.
+void terminal_clear_row(size_t row) {
+	for (int i = 0; i < VGA_WIDTH; i++)
+		terminal_putentryat(' ', terminal_color, i, row);
+	terminal_column = 0;
+}
+
+// Set row.
+void terminal_setrow(size_t row) {
+	if (row > VGA_HEIGHT)
+		row = VGA_HEIGHT - 1;
+	terminal_row = row;
+}
+
+// Set column.
+void terminal_setcolumn(size_t column) {
+	if (column > VGA_WIDTH)
+		column = VGA_WIDTH - 1;
+	terminal_column = column;
 }

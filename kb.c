@@ -44,6 +44,7 @@ unsigned char kbdus[128] =
 };
 
 
+// Custom keyboard handler called on key press.
 void (*key_handler)(unsigned char);
 
 // Handles the keyboard interrupt.

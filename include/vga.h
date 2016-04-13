@@ -30,3 +30,11 @@ void terminal_setcolor(uint8_t color);
 void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
 void terminal_putchar(char c);
 void terminal_writestring(const char* data);
+
+size_t curr_terminal_row();
+size_t curr_terminal_column();
+
+void terminal_clear_row(size_t row);
+
+void terminal_setrow(size_t row);
+void terminal_setcolumn(size_t column);
