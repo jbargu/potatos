@@ -7,7 +7,7 @@ ASSFLAGS=-felf32
 LDFLAGS=-T linker.ld -ffreestanding -O2 -nostdlib -lgcc
 ASSEMBLY_SOURCES=boot.asm
 ASSEMBLY_OBJECTS=$(ASSEMBLY_SOURCES:.asm=.o)
-C_SOURCES=kernel.c vga.c gdt.c idt.c isrs.c irq.c kb.c
+C_SOURCES=kernel.c vga.c gdt.c idt.c isrs.c irq.c kb.c bash.c
 C_OBJECTS=$(C_SOURCES:.c=.o)
 KERNEL=potatos.bin
 ISO=potatos.iso

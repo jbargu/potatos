@@ -37,7 +37,7 @@ void *memset(void *adr, int c, int n) {
 }
 
 /* Installs the IDT */
-void idt_install() {
+void idt_initialize() {
     /* Sets the special IDT pointer up, just like in 'gdt.c' */
     idtp.limit = (sizeof (struct idt_entry) * 256) - 1;
     idtp.base = &idt;

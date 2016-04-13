@@ -40,7 +40,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 }
 
 // Sets null, code and data segments and relaods them.
-void gdt_install() {
+void gdt_initialize() {
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
     gp.base = &gdt;
 

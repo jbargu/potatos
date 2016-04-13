@@ -61,7 +61,7 @@ void irq_remap(void) {
 
 /* We first remap the interrupt controllers, and then we install
 *  the appropriate ISRs to the correct entries in the IDT. */
-void irq_install() {
+void irq_initialize() {
     irq_remap();
 
     idt_set_gate(32, (unsigned)irq0, 0x08, 0x8E);

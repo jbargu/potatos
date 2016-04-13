@@ -8,6 +8,6 @@ struct regs
     unsigned int int_no, err_code;    // pushed in isrX
     unsigned int eip, cs, eflags, useresp, ss;   // pushed automatically
 };
-void isrs_install();
+void isrs_initialize();
 
 #endif

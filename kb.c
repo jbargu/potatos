@@ -1,4 +1,5 @@
 #include <isrs.h>
+#include <irq.h>
 #include <vga.h>
 
 /* This is a scancode table used to layout a standard US keyboard. */
@@ -43,20 +44,22 @@ unsigned char kbdus[128] =
 };
 
 
-/* Handles the keyboard interrupt */
+void (*key_handler)(unsigned char);
+
+// Handles the keyboard interrupt.
 void keyboard_handler(struct regs *r) {
-    unsigned char scancode;
+    unsigned char scancode = inportb(0x60);
 
-    /* Read from the keyboard's data buffer */
-    scancode = inportb(0x60);
-
-    /* If the top bit of the byte we read from the keyboard is
-    *  set, that means that a key has just been released */
-    if (!(scancode & 0x80))
-	terminal_putchar(kbdus[scancode]);
+    // If the top bit of the byte we read from the keyboard is
+    // set, that means that a key has just been released. Call appropriate
+    // handler if given.
+    if (!(scancode & 0x80) && key_handler)
+	key_handler(kbdus[scancode]);
 }
 
-/* Installs the keyboard handler into IRQ1 */
-void keyboard_install() {
+// Installs the keyboard handler into IRQ1. Handler can be provided which is
+// called on success.
+void keyboard_initialize(void (*handler)(unsigned char key)) {
+    key_handler = handler;
     irq_install_handler(1, keyboard_handler);
 }

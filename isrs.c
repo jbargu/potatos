@@ -40,7 +40,7 @@ extern void isr31();
 *  We set flags to 0x8E. This means that the entry is present, is
 *  running in ring 0 (kernel level), and has the lower 5 bits
 *  set to the required '14'. */
-void isrs_install()
+void isrs_initialize()
 {
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);

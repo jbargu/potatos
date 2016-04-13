@@ -1,2 +1,2 @@
 
-void keyboard_install();
+void keyboard_initialize();
