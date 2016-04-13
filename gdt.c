@@ -1,5 +1,6 @@
 #include<gdt.h>
 
+// A picture tells thousand words http://wiki.osdev.org/GDT
 struct gdt_entry
 {
     unsigned short limit_low;
@@ -18,7 +19,6 @@ struct gdt_ptr
     unsigned int base;
 } __attribute__((packed));
 
-/* Our GDT, with 3 entries, and finally our special GDT pointer */
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
 
@@ -60,7 +60,7 @@ void gdt_install()
     *  uses 32-bit opcodes, and is a Code Segment descriptor. */
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 
-		// Data segment
+    // Data segment
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
     /* Flush out the old GDT and install the new changes! */
