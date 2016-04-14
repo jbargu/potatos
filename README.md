@@ -2,6 +2,8 @@
 
 A simple bash like operating system.
 
+![Cow says moo!](http://s30.postimg.org/6ml8205zl/cowsay.png)
+
 ## Installation
 
 ### GCC Cross-Compiler and binutils
