@@ -88,6 +88,7 @@ void execute_command() {
 
 }
 
+// Handles any keyboard presses.
 void keyboard_callback(unsigned char key) {
     if (key == '\n') {
 	terminal_writestring("\n");
@@ -112,10 +113,12 @@ void keyboard_callback(unsigned char key) {
 
 }
 
+// Print our "$" prompt.
 void print_prompt() {
     terminal_writestring("$ ");
 }
 
+// Initialize our bash.
 void init_bash() {
     keyboard_initialize(keyboard_callback);
 

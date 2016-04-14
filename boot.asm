@@ -95,6 +95,9 @@ global isr29
 global isr30
 global isr31
 
+; All exception push on stack the error code (if they don't, we push dummy
+; variable 0 to avoid complexity, and then push their sequential number so we
+; recongize them in C callback function.
 ;  0: Divide By Zero Exception
 isr0:
     cli
@@ -359,6 +362,8 @@ global irq13
 global irq14
 global irq15
 
+; IRQs work the same way ISRs do. Not much to say. Much copy pasting was
+; involved.
 ; 32: IRQ0
 irq0:
     cli
@@ -473,6 +478,7 @@ irq15:
 
 extern irq_handler
 
+; Handles IRQs. Currently we only care about keyboard, all others go to void.
 irq_callback_common:
     pusha
     push ds
