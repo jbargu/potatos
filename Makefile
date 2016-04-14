@@ -1,13 +1,13 @@
 IDIR=./include
 CC=i686-elf-gcc
-CFLAGS=-c -std=gnu99 -ffreestanding -O2 -Wall -Wextra -I$(IDIR)
+CFLAGS=-c -g -std=gnu99 -ffreestanding -O2 -Wall -Wextra -I$(IDIR)
 
 ASS=nasm
 ASSFLAGS=-felf32
 LDFLAGS=-T linker.ld -ffreestanding -O2 -nostdlib -lgcc
 ASSEMBLY_SOURCES=boot.asm
 ASSEMBLY_OBJECTS=$(ASSEMBLY_SOURCES:.asm=.o)
-C_SOURCES=kernel.c vga.c gdt.c idt.c isrs.c irq.c kb.c bash.c
+C_SOURCES=kernel.c vga.c gdt.c idt.c isrs.c irq.c kb.c bash.c string.c stdlib.c rtc.c
 C_OBJECTS=$(C_SOURCES:.c=.o)
 KERNEL=potatos.bin
 ISO=potatos.iso
@@ -27,6 +27,9 @@ $(KERNEL): $(ASSEMBLY_OBJECTS) $(C_OBJECTS)
 
 run: all
 	$(QEMU) -kernel $(KERNEL)
+
+debug: all
+	$(QEMU) -kernel $(KERNEL) -S -s
 
 cdrom: all
 	\cp $(KERNEL) isodir/boot

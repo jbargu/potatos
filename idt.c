@@ -32,7 +32,7 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 void *memset(void *adr, int c, int n) {
     char *a = (char *)adr;
     for(int i = 0; i < n; i++)
-		    a[i] = c;
+	a[i] = c;
     return adr;
 }
 

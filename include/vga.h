@@ -34,6 +34,8 @@ void terminal_writestring(const char* data);
 size_t curr_terminal_row();
 size_t curr_terminal_column();
 
+
+void clear_screen();
 void terminal_clear_row(size_t row);
 
 void terminal_setrow(size_t row);
